@@ -17,6 +17,7 @@ func sum (slice []int) int {
 	}
 	return total
 }
+
 /* Version 2 of sum (more calls to memory) 'Recursion'
 func sum (slice []int) int {
 	if len(slice) == 0 {
@@ -25,6 +26,23 @@ func sum (slice []int) int {
 	return slice[0] + sum(slice[1:])
 }
 */
+
+//Function that is looking for 2 numbers that can make the sum (retun -1, -1 for none)
+func find2thatSum(slice []int, sum int) (int, int) {
+	for i, n := range slice {
+		for j, n2 := range slice {
+			if i == j{
+				continue
+			}
+			if n+n2 == sum {
+				return i, j
+			}
+		}
+	}
+	return -1, -1
+}
+
+
 
 //Function to read the entries in the console
 func readInput() []int {
@@ -52,6 +70,10 @@ func readInput() []int {
 //Main function to print the result by calling sum and readInput functions
 func main(){
 
-	fmt.Print("The sum of entered integers is: ", sum(readInput())) 
+	slice :=readInput()
+	sum := sum(slice)
+	fmt.Print("The sum of entered integers is: ", sum) 
 	
+	number, number2 := find2thatSum(slice, sum)
+	fmt.Printf("\nThe numbers that can make the sum are: %v, %v", number, number2)
 }
