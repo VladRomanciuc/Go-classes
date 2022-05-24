@@ -54,6 +54,7 @@ func main() {
 	
 	//add a number to the slice
 		mainSlice = append(mainSlice, newEntry)
+		//Standard Sort function in increasing order for integers
 		sort.Ints(mainSlice[:])
 
 		fmt.Printf("This is the sorted slice %v\n", mainSlice)

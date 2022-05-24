@@ -51,7 +51,29 @@ func Swap(rawSlice []int, j int) {
 	var swaper = rawSlice[j]
 	rawSlice[j] = rawSlice[j-1]
 	rawSlice[j-1] = swaper
+
+	//Go alternative
+	//rawSlice[j], rawSlice[j-1] = rawSlice[j-1], rawSlice[j]
 	}
+
+	//BubbleSort faster for go
+/*
+func BubbleSortOpt(rawSlice []int) {
+	for sweepN := 0; sweepN < len(rawSlice); sweepN++ {
+		swapped := false
+
+		for i :=0; i < len(rawSlice)-1-sweepN; i++ {
+			if rawSlice[i] > rawSlice[i+1] {
+				rawSlice[i], rawSlice[i+1] = rawSlice[i+1], rawSlice[i]
+				swapped = true
+			}
+		}
+		if !swapped {
+			break
+		}
+	}
+}
+*/
 
 	//Main function of the bubble sort algorithm program
 func main() {
