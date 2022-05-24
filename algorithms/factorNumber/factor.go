@@ -30,9 +30,37 @@ func input() int {
 	return number
 }
 
+//GCD Greatest common divisor - Euclidean algorithm
+//
+func GCD(a, b int) int {
+	for b != 0 {
+		a, b = b, a % b
+	}
+	return a
+}
+
 func main() {
-	primes := []int{2,3,4,5,6,7,8,9}
-	fmt.Print("Please enter your number to factor:\n ")
-	number := input()
-	fmt.Print("\nThe primes are:", factor(primes, number))
+	fmt.Print("Please select an action:\n1. Factoring a number\n2. Greatest common divisor\n")
+	
+	primes := []int{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97}
+	
+	selector := input()
+
+	switch {
+	case selector == 1:
+		fmt.Print("Please enter your number to factor: ")
+		number := input()
+		fmt.Print("\nThe primes are:", factor(primes, number))
+	
+	case selector == 2:
+		fmt.Print("Please enter your first number to find GCD: ")
+		first := input()
+		fmt.Print("Please enter your second number to find GCD: ")
+		second := input()
+		fmt.Print("\nThe GCD is: ", GCD(first, second))
+
+	default:
+		fmt.Print("\nUps.... try again.")
+	}
+	
 }
