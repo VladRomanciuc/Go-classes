@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"math"
 )
 
 //Function that run 2 loops over and devide the number appending the divider as a result
@@ -39,10 +40,31 @@ func GCD(a, b int) int {
 	return a
 }
 
+//Primes generator
+func makePrimes(max int) []int {
+	var result []int
+	for n := 3; n < max; n += 2 {
+		
+		prime := true
+		sqrtPlus1 := math.Sqrt(float64(n)) + 1
+		for i := 3; float64(i) < sqrtPlus1; i += 2 {
+			if n%i == 0 {
+				prime = false
+				break
+			}
+		}
+
+		if prime {
+			result = append(result, n)
+		}
+	}
+	return result
+}
+
 func main() {
 	fmt.Print("Please select an action:\n1. Factoring a number\n2. Greatest common divisor\n")
 	
-	primes := []int{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97}
+	primes := makePrimes(100)
 	
 	selector := input()
 
