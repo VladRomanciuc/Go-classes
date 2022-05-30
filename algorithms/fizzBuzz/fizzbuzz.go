@@ -31,7 +31,16 @@ func FizzBuzz(number []int) {
 	}
 }
 
+//int generator
+func makeRange(min, max int) []int {
+    a := make([]int, max-min+1)
+    for i := range a {
+        a[i] = min + i
+    }
+    return a
+}
+
 func main () {
-	data := []int{8,9,10,11,23,45,67,123,4456,45,3,4,5,23}
+	data := makeRange(0, 100)
 	FizzBuzz(data)
 }
