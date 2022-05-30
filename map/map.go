@@ -73,4 +73,5 @@ func main() {
 	test(users, "santa")
 	test(users, "kade")
 	fmt.Println(len(users))
+
 }
