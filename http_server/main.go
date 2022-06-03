@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 	"time"
-	"database"
+	"github.com/VladRomanciuc/Go-classes/http_server/database"
 )
 
 type apiConfig struct {
