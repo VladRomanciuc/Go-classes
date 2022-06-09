@@ -1,3 +1,3 @@
-module example/cash
+module example/cashGo
 
 go 1.18
