@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -10,11 +9,27 @@ import (
 	"github.com/VladRomanciuc/Go-classes/server/internal/database"
 )
 
+type apiConfig struct {
+	dbClient database.Client
+}
+
 func main() {
 	m := http.NewServeMux()
 
-	m.HandleFunc("/", testHandler)
-	m.HandleFunc("/err", testErrHandler)
+	const dbPath = "db.json"
+	dbClient := database.NewClient(dbPath)
+
+	err := dbClient.EnsureDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	apiCfg := apiConfig{
+		dbClient: dbClient,
+	}
+
+	m.HandleFunc("/users", apiCfg.endpointUsersHandler)
+	m.HandleFunc("/users/", apiCfg.endpointUsersHandler)
 
 	const addr = "localhost:8080"
 	srv := http.Server{
@@ -27,18 +42,8 @@ func main() {
 	// this blocks forever, until the server
 	// has an unrecoverable error
 	fmt.Println("server started on ", addr)
-	err := srv.ListenAndServe()
+	err = srv.ListenAndServe()
 	log.Fatal(err)
-}
-
-func testHandler(w http.ResponseWriter, r *http.Request) {
-	respondWithJSON(w, 200, database.User{
-		Email: "test@example.com",
-	})
-}
-
-func testErrHandler(w http.ResponseWriter, r *http.Request) {
-	respondWithError(w, 500, errors.New("server error"))
 }
 
 type errorBody struct {
