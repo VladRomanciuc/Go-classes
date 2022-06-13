@@ -1,16 +1,20 @@
 package main
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
 	"time"
+	"github.com/VladRomanciuc/Go-classes/server/internal/database"
 )
 
 func main() {
 	m := http.NewServeMux()
 
 	m.HandleFunc("/", testHandler)
+	m.HandleFunc("/err", testErrHandler)
 
 	const addr = "localhost:8080"
 	srv := http.Server{
@@ -28,7 +32,45 @@ func main() {
 }
 
 func testHandler(w http.ResponseWriter, r *http.Request) {
+	respondWithJSON(w, 200, database.User{
+		Email: "test@example.com",
+	})
+}
+
+func testErrHandler(w http.ResponseWriter, r *http.Request) {
+	respondWithError(w, 500, errors.New("server error"))
+}
+
+type errorBody struct {
+	Error string `json:"error"`
+}
+
+func respondWithError(w http.ResponseWriter, code int, err error) {
+	if err == nil {
+		log.Println("don't call respondWithError with a nil err!")
+		return
+	}
+	log.Println(err)
+	respondWithJSON(w, code, errorBody{
+		Error: err.Error(),
+	})
+}
+
+func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(200)
-	w.Write([]byte("{}"))
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	if payload != nil {
+		response, err := json.Marshal(payload)
+		if err != nil {
+			log.Println("error marshalling", err)
+			w.WriteHeader(500)
+			response, _ := json.Marshal(errorBody{
+				Error: "error marshalling",
+			})
+			w.Write(response)
+			return
+		}
+		w.WriteHeader(code)
+		w.Write(response)
+	}
 }
