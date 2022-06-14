@@ -2,7 +2,6 @@
     "go.toolsEnvVars": {},
     "go.goroot": "",
     "go.gopath": "",
-    "go.inferGopath": true,
     "go.autocompleteUnimportedPackages": true,
     "go.gocodePackageLookupMode": "go",
     "go.gotoSymbol.includeImports": true,
