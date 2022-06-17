@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"golang.org/x/crypto/bcrypt"
+	"crypto/bcrypt"
 )
 
 func hashPassword(password string) (string, error) {

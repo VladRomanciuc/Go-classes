@@ -3,7 +3,9 @@ package main
 import "fmt"
 
 /*
-key schedule's algorithm will accept a master key ([4]byte) and a round number (int) as inputs. The key schedule will then produce a round key where each byte in the round key is the original byte from the master key XORed with the binary representation of the round number.
+key schedule's algorithm will accept a master key ([4]byte) and a round number (int) as inputs. 
+The key schedule will then produce a round key where each byte in the round key is the original byte 
+from the master key XORed with the binary representation of the round number.
 */
 
 func deriveRoundKey(masterKey [4]byte, roundNumber int) [4]byte {
