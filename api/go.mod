@@ -1,4 +1,4 @@
-module example/main
+module github.com/VladRomanciuc/Go-classes/api
 
 go 1.18
 
