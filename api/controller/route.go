@@ -3,7 +3,6 @@ package controller
 import (
 	"encoding/json"
 	"net/http"
-	"github.com/VladRomanciuc/Go-classes/api/model"
 	"github.com/VladRomanciuc/Go-classes/api/views"
 	"github.com/gorilla/mux"
 )
@@ -48,8 +47,9 @@ func delete(w http.ResponseWriter, r *http.Request) {
 
 func Register() *mux.Router {
     r := mux.NewRouter()
-    api := r.PathPrefix("/api/v1").Subrouter()
-	api.HandleFunc("", model.Get)
+    api := r.PathPrefix("/api/v1").HeadersRegexp("Authorization", "Basic [a-zA-Z0-9]{1,128}").
+	Subrouter()
+
     api.HandleFunc("", post)
     api.HandleFunc("", put)
     api.HandleFunc("", delete)

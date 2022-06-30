@@ -1,11 +1,32 @@
-
 package model
 
 import (
-	"github.com/VladRomanciuc/Go-classes/api/views"
+	"log"
 	f "github.com/fauna/faunadb-go/v4/faunadb"
 )
 
+
+func createClass(className string) {
+
+	res, err := db.Query(
+		f.If(
+			f.Exists(f.Class(className)),
+			true,
+			f.CreateClass(f.Obj{"name": className})))
+
+	if err != nil {
+		panic(err)
+	}
+
+	if res != f.BooleanV(true) {
+		log.Printf("Created Class: %s\n %s", className, res)
+	} else {
+		log.Printf("Class: %s, Already Exists\n %s", className, res)
+	}
+}
+
+
+/*
 func DBGetAll(client *f.FaunaClient, token string) (refs []f.RefV, err error) {
 	value, err := client.Query(
 		f.Paginate(
@@ -24,7 +45,7 @@ func DBGetAll(client *f.FaunaClient, token string) (refs []f.RefV, err error) {
 }
 
 // DBGetFromRefs - get all elements
-func DBGetFrom(client *f.FaunaClient, refs []f.RefV) (entries []views.Entry, err error) {
+func DBGetFrom(client *f.FaunaClient, refs []f.RefV) (entries []Entry, err error) {
 	request := Mapper(refs, func(ref f.RefV) interface{} {
 		return f.Get(ref)
 	})
@@ -41,7 +62,7 @@ func DBGetFrom(client *f.FaunaClient, refs []f.RefV) (entries []views.Entry, err
 	for index, element := range elements {
 		var object f.ObjectV
 		element.At(f.ObjKey("data")).Get(&object)
-		var entry views.Entry
+		var entry Entry
 		object.Get(&entry)
 		results[index] = entry
 	}
@@ -49,7 +70,7 @@ func DBGetFrom(client *f.FaunaClient, refs []f.RefV) (entries []views.Entry, err
 	return results, nil
 }
 
-func (entry Entry) DBGet(client *f.FaunaClient) (value f.Value, err error) {
+func (entry Entry) DBGetEntry(client *f.FaunaClient) (value f.Value, err error) {
 	return client.Query(
 		f.Get(
 			f.MatchTerm(
@@ -59,9 +80,4 @@ func (entry Entry) DBGet(client *f.FaunaClient) (value f.Value, err error) {
 		),
 	)
 }
-
-type Get interface {
-	DbGet()
-	DBGetFrom()
-	DBGetAll()
-}
+*/
