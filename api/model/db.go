@@ -45,5 +45,34 @@ func Connect() {
 	} else {
 		log.Printf("Database: %s, Already Exists\n %s", dbName, res)
 	}
+
 }
 
+
+func DbClient() (dbClient *f.FaunaClient) {
+	var res f.Value
+	var err error
+
+	var secret string
+
+	res, err = adminClient.Query(
+		f.CreateKey(f.Obj{
+			"database": f.Database(dbName),
+			"role":     "server"}))
+
+	if err != nil {
+		panic(err)
+	}
+
+	err = res.At(f.ObjKey("secret")).Get(&secret)
+
+	if err != nil {
+		panic(err)
+	}
+
+	log.Printf("Database: %s, specifc key: %s\n%s", dbName, secret, res)
+
+	dbClient = adminClient.NewSessionClient(secret)
+
+	return dbClient
+}
