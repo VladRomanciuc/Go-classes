@@ -14,7 +14,7 @@ var (
 )
 
 //get post function
-func getPosts(w http.ResponseWriter, r *http.Request) {
+func GetPosts(w http.ResponseWriter, r *http.Request) {
 	//Write header with type of content "json"
 	w.Header().Set("Content-type", "application/json")
 
@@ -29,7 +29,7 @@ func getPosts(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(posts)
 }
 
-func addPost(w http.ResponseWriter, r *http.Request) {
+func AddPost(w http.ResponseWriter, r *http.Request) {
 	//Write header with type of content "json"
 	w.Header().Set("Content-type", "application/json")
 	//variable post of typ Post structure

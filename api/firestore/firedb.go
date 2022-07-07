@@ -7,6 +7,7 @@ import (
 	"github.com/VladRomanciuc/Go-classes/api/views"
   
 	"cloud.google.com/go/firestore"
+	"google.golang.org/api/option"
   )
   
 type PostFire interface {
@@ -36,9 +37,11 @@ func getEnv(key string) string {
 	return value
 }
 
+
 func (*collection) Save(post *views.Post) (*views.Post, error) {
 	c := context.Background()
-	client, err := firestore.NewClient(c, getEnv("project_id"))
+	opt := option.WithCredentialsFile("../fireadmin.json")
+	client, err := firestore.NewClient(c, opt)
 	if err != nil {
 		log.Fatal("Failed to create Firestore client: %v", err)
 		return nil, err
@@ -59,10 +62,12 @@ func (*collection) Save(post *views.Post) (*views.Post, error) {
 	return post, nil
 }
 
+const path = "../fireadmin.json"
 
 func (*collection) GetAll() ([]views.Post, error) {
 	c := context.Background()
-	client, err := firestore.NewClient(c, getEnv("project_id"))
+	opt := option.WithCredentialsFile(path)
+	client, err := firestore.NewClient(c, opt)
 	if err != nil {
 		log.Fatal("Failed to create Firestore client: %v", err)
 		return nil, err
