@@ -1,79 +1,58 @@
 package model
 
+//Creates the initial table on local DynamoDb
+//AWS CLI: aws  --endpoint-url http://localhost:8000 dynamodb create-table --cli-input-json file://users.json
+
 import (
+	"fmt"
 	"log"
+	"context"
 	"github.com/spf13/viper"
-	f "github.com/fauna/faunadb-go/v4/faunadb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/credentials"
+	"github.com/aws/aws-sdk-go-v2/aws"
 )
 
-func viperEnv(key string) string {
-	
+
+func getEnv(key string) string {
 	viper.SetConfigFile(".env")
 	err := viper.ReadInConfig()
+  
 	if err != nil {
-		log.Fatalf("\nError while reading config file %s", err)
-	  }
+	  log.Fatalf("Error while reading config file %s", err)
+	}
 	value, ok := viper.Get(key).(string)
 	if !ok {
-		log.Fatalf("\nInvalid type assertion")
-	  }
-	
+	  log.Fatalf("Invalid type assertion")
+	}
 	return value
-}
+  }
 
-var (
-	key = viperEnv("FAUNA_KEY")
-	endPoint = f.Endpoint("https://db.eu.fauna.com:443")
-	adminClient = f.NewFaunaClient(key, endPoint)
-	dbName = "api-go"
-	db *f.FaunaClient
-	
-)
+  //viperenv := viperEnvVariable("STRONGEST_AVENGER")
 
-func Connect() {
-	res, err := adminClient.Query(
-		f.If(
-			f.Exists(f.Database(dbName)),
-			true,
-			f.CreateDatabase(f.Obj{"name": dbName})))
-
+  func DBcon() *dynamodb.Client {
+	cfg, err := config.LoadDefaultConfig(context.TODO(),
+		config.WithRegion(getEnv("Region")),
+		config.WithEndpointResolverWithOptions(aws.EndpointResolverWithOptionsFunc(
+			func(service, region string, options ...interface{}) (aws.Endpoint, error) {
+				return aws.Endpoint{URL: getEnv("Endpoint"), SigningRegion: getEnv("Region")}, nil
+			})),
+	)
 	if err != nil {
-		panic(err)
+		log.Fatalf("unable to load SDK config, %v", err)
 	}
 
-	if res != f.BooleanV(true) {
-		log.Printf("Created Database: %s\n %s", dbName, res)
-	} else {
-		log.Printf("Database: %s, Already Exists\n %s", dbName, res)
-	}
+	awsClient := dynamodb.NewFromConfig(cfg, func(o *dynamodb.Options) {
+		o.Credentials = credentials.NewStaticCredentialsProvider(getEnv("KeyID"), getEnv("Key"), "")
+	})
+	return awsClient
+  }
 
-}
-
-
-func DbClient() (dbClient *f.FaunaClient) {
-	var res f.Value
-	var err error
-
-	var secret string
-
-	res, err = adminClient.Query(
-		f.CreateKey(f.Obj{
-			"database": f.Database(dbName),
-			"role":     "server"}))
-
-	if err != nil {
-		panic(err)
-	}
-
-	err = res.At(f.ObjKey("secret")).Get(&secret)
-
-	if err != nil {
-		panic(err)
-	}
-
-	log.Printf("Database: %s, specifc key: %s\n%s", dbName, secret, res)
-
-	dbClient = adminClient.NewSessionClient(secret)
-
-	return dbClient
-}
+  func TestClient(){
+	tableName := ""
+	input := dynamodb.DescribeTable(
+		context.TODO(), &dynamodb.DescribeTableInput{TableName: aws.String(tableName)},
+	)
+	fmt.Printf("client data: %+v\n", input)
+  }

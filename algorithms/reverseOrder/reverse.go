@@ -6,6 +6,8 @@ import (
 	"os"
 )
 
+
+
 //The most efficient way (can handle large Chinise words)
 func reverse(entry string) string {
 	var result string
