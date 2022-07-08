@@ -11,8 +11,8 @@ import (
 	"google.golang.org/api/iterator"
   )
   
-type PostFire interface {
-	Save(post *models.Post) (*models.Post, error)
+type PostOps interface {
+	AddPost(post *models.Post) (*models.Post, error)
 	GetAll() ([]models.Post, error)
 }
 
@@ -21,12 +21,12 @@ type collection struct{}
 const collName = "posts"
 
 
-func NewPostFirestore() PostFire{
+func NewPostOpsCollection() PostOps{
 	return &collection{}
 }
 
 
-func (*collection) Save(post *models.Post) (*models.Post, error) {
+func (*collection) AddPost(post *models.Post) (*models.Post, error) {
 	c := context.Background()
 
 	opt := option.WithCredentialsFile("C:\\Users\\alina\\Desktop\\Go classes\\api\\serviceAccountKey.json")

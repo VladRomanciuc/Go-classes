@@ -10,7 +10,7 @@ import (
 
 
 var (
-	fireCol PostFire = NewPostFirestore()
+	fireCollection PostOps = NewPostOpsCollection()
 )
 
 //get post function
@@ -18,7 +18,7 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 	//Write header with type of content "json"
 	w.Header().Set("Content-type", "application/json")
 
-	posts, err := fireCol.GetAll()
+	posts, err := fireCollection.GetAll()
 	if err != nil{
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(`{"error": "Error getting posts from firestore"}`))
@@ -45,7 +45,7 @@ func AddPost(w http.ResponseWriter, r *http.Request) {
 	//if no errors assign the next postID to the json posted of type post
 	post.Id = rand.Int63()
 	//add the new post to posts slice
-	fireCol.Save(&post)
+	fireCollection.Save(&post)
 	//the header will have status 200 and body the encoded json
 	w.WriteHeader(http.StatusOK)
 	//variable result encode post to json
