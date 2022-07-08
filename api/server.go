@@ -1,14 +1,15 @@
 package main
 
 import (
+	"github.com/VladRomanciuc/Go-classes/api/models"
 	"github.com/VladRomanciuc/Go-classes/api/router"
 	"github.com/VladRomanciuc/Go-classes/api/controller"
 )
 
 var (
 	postController controller.PostController = controller.NewPostController()
-	//api router.Router = router.NewRouterMux()
-	api router.Router = router.NewRouterChi()
+	//api models.Router = router.NewRouterMux()
+	api models.Router = router.NewRouterChi()
 )
 
 func main() {
