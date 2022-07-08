@@ -1,7 +1,7 @@
 package models
 
 
-type Config struct {
+type DynamoConfig struct {
 	Endpoint string
 	Region  string
 	Profile string
@@ -15,4 +15,8 @@ type Post struct{
 	Id 		int64		`json:"Id"`
 	Title	string	`json:"Title"`
 	Text 	string	`json:"Text"`
+}
+
+type ServiceError struct{
+	Message string `json:"message"`
 }
