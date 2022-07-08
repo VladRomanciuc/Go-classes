@@ -1,4 +1,4 @@
-package firestoreapi
+package dbapi
 
 import (
 	"context"

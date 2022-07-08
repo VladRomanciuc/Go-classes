@@ -5,11 +5,11 @@ import (
 	"math/rand"
 
 	"github.com/VladRomanciuc/Go-classes/api/models"
-	"github.com/VladRomanciuc/Go-classes/api/firestoreapi"
+	"github.com/VladRomanciuc/Go-classes/api/dbapi"
 )
 
 var (
-	fireCollection firestoreapi.PostOps = firestoreapi.NewPostOpsCollection()
+	db dbapi.PostOps = dbapi.NewPostOpsCollection()
 )
 
 type PostService interface{
@@ -27,12 +27,12 @@ func NewPostService() PostService{
 
 func (*service) Validate(post *models.Post) error {
 	if post == nil {
-		err := errors.New("Post is empty")
+		err := errors.New("post is empty")
 		return err
 	}
 
 	if post.Title == "" {
-		err := errors.New("Title is empty")
+		err := errors.New("title is empty")
 		return err
 	}
 
@@ -41,9 +41,9 @@ func (*service) Validate(post *models.Post) error {
 
 func (*service) AddPost(post *models.Post) (*models.Post, error) {
 	post.Id = rand.Int63()
-	return fireCollection.AddPost(post)
+	return db.AddPost(post)
 }
 
 func (*service) GetAll() ([]models.Post, error) {
-	return fireCollection.GetAll()
+	return db.GetAll()
 }

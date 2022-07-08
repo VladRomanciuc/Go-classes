@@ -7,12 +7,13 @@ import (
 
 var (
 	postController controller.PostController = controller.NewPostController()
-	routerMux router.Router = router.NewRouterMux()
+	//api router.Router = router.NewRouterMux()
+	api router.Router = router.NewRouterChi()
 )
 
 func main() {
     port := ":8080"
-	routerMux.GET("/posts", postController.GetAll)
-	routerMux.POST("/posts", postController.AddPost)
-    routerMux.SERVE(port)
+	api.GET("/posts", postController.GetAll)
+	api.POST("/posts", postController.AddPost)
+    api.SERVE(port)
 }

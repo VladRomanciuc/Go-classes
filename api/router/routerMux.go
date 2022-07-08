@@ -3,24 +3,25 @@ package router
 import (
 	"net/http"
 
+	"github.com/VladRomanciuc/Go-classes/api/models"
 	"github.com/gorilla/mux"
 
 )
 
-var router = mux.NewRouter()
+var muxRouter = mux.NewRouter()
 
 type routerMux struct{}
 
-func NewRouterMux() Router{
+func NewRouterMux() models.Router{
 	return &routerMux{}
 }
 
 func (*routerMux) GET(url string, f func(w http.ResponseWriter, r *http.Request)){
-	router.HandleFunc(url, f).Methods("GET")
+	muxRouter.HandleFunc(url, f).Methods("GET")
 }
 func (*routerMux)	POST(url string, f func(w http.ResponseWriter, r *http.Request)){
-	router.HandleFunc(url, f).Methods("POST")
+	muxRouter.HandleFunc(url, f).Methods("POST")
 }
 func (*routerMux)	SERVE(port string){
-	http.ListenAndServe(port, router)
+	http.ListenAndServe(port, muxRouter)
 }
