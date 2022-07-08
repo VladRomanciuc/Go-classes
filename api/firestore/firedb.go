@@ -8,6 +8,7 @@ import (
 	"google.golang.org/api/option"
   
 	"cloud.google.com/go/firestore"
+	"google.golang.org/api/iterator"
   )
   
 type PostFire interface {
@@ -65,11 +66,12 @@ func (*collection) GetAll() ([]views.Post, error) {
 
 	var posts []views.Post
 
-	i := client.Collection(collName).Documents(c)
+	coll := client.Collection(collName)
+	i := coll.Documents(c)
 	defer i.Stop()
 	for {
 		doc, err := i.Next()
-		if err == i.Done {
+		if err == iterator.Done {
 			break
 		}
 		if err != nil {
