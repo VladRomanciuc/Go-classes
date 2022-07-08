@@ -3,7 +3,7 @@ package firestore
 import (
 	"context"
 	"log"
-	"github.com/VladRomanciuc/Go-classes/api/views"
+	"github.com/VladRomanciuc/Go-classes/api/models"
 
 	"google.golang.org/api/option"
   
@@ -12,8 +12,8 @@ import (
   )
   
 type PostFire interface {
-	Save(post *views.Post) (*views.Post, error)
-	GetAll() ([]views.Post, error)
+	Save(post *models.Post) (*models.Post, error)
+	GetAll() ([]models.Post, error)
 }
 
 type collection struct{}
@@ -26,7 +26,7 @@ func NewPostFirestore() PostFire{
 }
 
 
-func (*collection) Save(post *views.Post) (*views.Post, error) {
+func (*collection) Save(post *models.Post) (*models.Post, error) {
 	c := context.Background()
 
 	opt := option.WithCredentialsFile("C:\\Users\\alina\\Desktop\\Go classes\\api\\serviceAccountKey.json")
@@ -52,7 +52,7 @@ func (*collection) Save(post *views.Post) (*views.Post, error) {
 }
 
 
-func (*collection) GetAll() ([]views.Post, error) {
+func (*collection) GetAll() ([]models.Post, error) {
 	c := context.Background()
 	
 	opt := option.WithCredentialsFile("C:\\Users\\alina\\Desktop\\Go classes\\api\\serviceAccountKey.json")
@@ -64,7 +64,7 @@ func (*collection) GetAll() ([]views.Post, error) {
 
 	defer client.Close()
 
-	var posts []views.Post
+	var posts []models.Post
 
 	coll := client.Collection(collName)
 	i := coll.Documents(c)
@@ -78,7 +78,7 @@ func (*collection) GetAll() ([]views.Post, error) {
 			log.Fatal("Failed to return the list of posts: %v", err)
 			return nil, err
 		}
-		post := views.Post {
+		post := models.Post {
 			Id: doc.Data()["Id"].(int64),
 			Title: doc.Data()["Title"].(string),
 			Text: doc.Data()["Text"].(string),

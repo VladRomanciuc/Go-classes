@@ -1,4 +1,4 @@
-package views
+package models
 
 
 type Config struct {

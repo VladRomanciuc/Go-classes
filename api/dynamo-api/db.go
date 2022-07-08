@@ -1,4 +1,4 @@
-package model
+package dynamo
 
 //Creates the initial table on local DynamoDb
 //AWS CLI: aws  --endpoint-url http://localhost:8000 dynamodb create-table --cli-input-json file://users.json

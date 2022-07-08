@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"math/rand"
 
-	"github.com/VladRomanciuc/Go-classes/api/views"
+	"github.com/VladRomanciuc/Go-classes/api/models"
 )
 
 
@@ -33,7 +33,7 @@ func AddPost(w http.ResponseWriter, r *http.Request) {
 	//Write header with type of content "json"
 	w.Header().Set("Content-type", "application/json")
 	//variable post of typ Post structure
-	var post views.Post
+	var post models.Post
 	//create new json decoder for the request body and decoding post message
 	err := json.NewDecoder(r.Body).Decode(&post)
 	//error handler writes header with status and display an error message
