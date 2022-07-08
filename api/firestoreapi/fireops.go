@@ -1,4 +1,4 @@
-package firestore
+package firestoreapi
 
 import (
 	"encoding/json"
