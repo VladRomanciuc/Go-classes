@@ -9,16 +9,10 @@ import (
 
 var db models.DbOps
 
-type PostService interface{
-	Validate(post *models.Post) error
-	AddPost(post *models.Post) (*models.Post, error)
-	GetAll() ([]models.Post, error)
-}
-
 type service struct{}
 
 //constructor
-func NewPostService(dbops models.DbOps) PostService{
+func NewPostService(dbops models.DbOps) models.PostService{
 	db = dbops
 	return &service{}
 }

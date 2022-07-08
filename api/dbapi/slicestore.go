@@ -1,4 +1,4 @@
-package demoapi
+package dbapi
 
 import (
 	"encoding/json"
@@ -9,9 +9,7 @@ import (
 )
 
 //Temp variable posts for storage
-var (
-	posts []models.Post
-)
+var posts []models.Post
 
 //get post function
 func GetPosts(w http.ResponseWriter, r *http.Request) {

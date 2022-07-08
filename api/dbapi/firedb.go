@@ -17,7 +17,7 @@ type collection struct{}
 const collName = "posts"
 
 
-func NewPostOpsCollection() models.DbOps{
+func NewFirestoreOps() models.DbOps{
 	return &collection{}
 }
 

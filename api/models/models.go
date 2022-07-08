@@ -9,6 +9,17 @@ type DbOps interface {
 	GetAll() ([]Post, error)
 }
 
+type PostService interface{
+	Validate(post *Post) error
+	AddPost(post *Post) (*Post, error)
+	GetAll() ([]Post, error)
+}
+
+type PostController interface{
+	GetAll(w http.ResponseWriter, r *http.Request)
+	AddPost(w http.ResponseWriter, r *http.Request)
+}
+
 type Router interface {
 	GET(url string, f func(w http.ResponseWriter, r *http.Request))
 	POST(url string, f func(w http.ResponseWriter, r *http.Request))

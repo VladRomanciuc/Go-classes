@@ -5,19 +5,13 @@ import (
 	"net/http"
 
 	"github.com/VladRomanciuc/Go-classes/api/models"
-	"github.com/VladRomanciuc/Go-classes/api/service"
 )
 
-var postService service.PostService
-
-type PostController interface{
-	GetAll(w http.ResponseWriter, r *http.Request)
-	AddPost(w http.ResponseWriter, r *http.Request)
-}
+var postService models.PostService
 
 type controller struct{}
 
-func NewPostController(service service.PostService) PostController{
+func NewPostController(service models.PostService) models.PostController {
 	postService = service
 	return &controller{}
 }

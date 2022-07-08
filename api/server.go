@@ -9,9 +9,9 @@ import (
 )
 
 var (
-	dbops models.DbOps = dbapi.NewPostOpsCollection()
-	postService service.PostService = service.NewPostService(dbops)
-	postController controller.PostController = controller.NewPostController(postService)
+	dbops models.DbOps = dbapi.NewFirestoreOps()
+	postService models.PostService = service.NewPostService(dbops)
+	postController models.PostController = controller.NewPostController(postService)
 	//api models.Router = router.NewRouterMux()
 	api models.Router = router.NewRouterChi()
 )
