@@ -11,17 +11,13 @@ import (
 	"google.golang.org/api/iterator"
   )
   
-type PostOps interface {
-	AddPost(post *models.Post) (*models.Post, error)
-	GetAll() ([]models.Post, error)
-}
 
 type collection struct{}
 
 const collName = "posts"
 
 
-func NewPostOpsCollection() PostOps{
+func NewPostOpsCollection() models.DbOps{
 	return &collection{}
 }
 

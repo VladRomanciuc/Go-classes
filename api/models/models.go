@@ -4,6 +4,11 @@ import (
 	"net/http"
 )
 
+type DbOps interface {
+	AddPost(post *Post) (*Post, error)
+	GetAll() ([]Post, error)
+}
+
 type Router interface {
 	GET(url string, f func(w http.ResponseWriter, r *http.Request))
 	POST(url string, f func(w http.ResponseWriter, r *http.Request))

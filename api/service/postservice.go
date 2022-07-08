@@ -5,12 +5,9 @@ import (
 	"math/rand"
 
 	"github.com/VladRomanciuc/Go-classes/api/models"
-	"github.com/VladRomanciuc/Go-classes/api/dbapi"
 )
 
-var (
-	db dbapi.PostOps = dbapi.NewPostOpsCollection()
-)
+var db models.DbOps
 
 type PostService interface{
 	Validate(post *models.Post) error
@@ -21,7 +18,8 @@ type PostService interface{
 type service struct{}
 
 //constructor
-func NewPostService() PostService{
+func NewPostService(dbops models.DbOps) PostService{
+	db = dbops
 	return &service{}
 }
 

@@ -8,9 +8,7 @@ import (
 	"github.com/VladRomanciuc/Go-classes/api/service"
 )
 
-var (
-	fireService service.PostService = service.NewPostService()
-)
+var postService service.PostService
 
 type PostController interface{
 	GetAll(w http.ResponseWriter, r *http.Request)
@@ -19,7 +17,8 @@ type PostController interface{
 
 type controller struct{}
 
-func NewPostController() PostController{
+func NewPostController(service service.PostService) PostController{
+	postService = service
 	return &controller{}
 }
 
@@ -28,7 +27,7 @@ func (*controller) GetAll(w http.ResponseWriter, r *http.Request) {
 	//Write header with type of content "json"
 	w.Header().Set("Content-type", "application/json")
 
-	posts, err := fireService.GetAll()
+	posts, err := postService.GetAll()
 	if err != nil{
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(models.ServiceError{Message: "Error getting posts from firestore"})
@@ -53,14 +52,14 @@ func (*controller) AddPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	validator := fireService.Validate(&post)
+	validator := postService.Validate(&post)
 	if validator != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(models.ServiceError{Message: validator.Error()})
 		return
 	}
 	//add the new post to posts slice
-	response, err := fireService.AddPost(&post)
+	response, err := postService.AddPost(&post)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(models.ServiceError{Message: "Error adding the post"})
