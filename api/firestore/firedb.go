@@ -3,11 +3,11 @@ package firestore
 import (
 	"context"
 	"log"
-	"github.com/spf13/viper"
 	"github.com/VladRomanciuc/Go-classes/api/views"
+
+	"google.golang.org/api/option"
   
 	"cloud.google.com/go/firestore"
-	"google.golang.org/api/option"
   )
   
 type PostFire interface {
@@ -16,6 +16,7 @@ type PostFire interface {
 }
 
 type collection struct{}
+
 const collName = "posts"
 
 
@@ -23,25 +24,12 @@ func NewPostFirestore() PostFire{
 	return &collection{}
 }
 
-func getEnv(key string) string {
-	viper.SetConfigFile("fireadmin.json")
-	err := viper.ReadInConfig()
-  
-	if err != nil {
-	  log.Fatalf("Error while reading config file %s", err)
-	}
-	value, ok := viper.Get(key).(string)
-	if !ok {
-	  log.Fatalf("Invalid type assertion")
-	}
-	return value
-}
-
 
 func (*collection) Save(post *views.Post) (*views.Post, error) {
 	c := context.Background()
-	opt := option.WithCredentialsFile("../fireadmin.json")
-	client, err := firestore.NewClient(c, opt)
+
+	opt := option.WithCredentialsFile("C:\\Users\\alina\\Desktop\\Go classes\\api\\serviceAccountKey.json")
+	client, err := firestore.NewClient(c, "api-go-d910c", opt)
 	if err != nil {
 		log.Fatal("Failed to create Firestore client: %v", err)
 		return nil, err
@@ -50,9 +38,9 @@ func (*collection) Save(post *views.Post) (*views.Post, error) {
 	defer client.Close()
 
 	_, _, err = client.Collection(collName).Add(c, map[string]interface{}{
-		"id": post.Id,
-		"title": post.Title,
-		"text": post.Text,
+		"Id": post.Id,
+		"Title": post.Title,
+		"Text": post.Text,
 	})
 	if err != nil {
 		log.Fatal("Failed adding a new post: %v", err)
@@ -62,12 +50,12 @@ func (*collection) Save(post *views.Post) (*views.Post, error) {
 	return post, nil
 }
 
-const path = "../fireadmin.json"
 
 func (*collection) GetAll() ([]views.Post, error) {
 	c := context.Background()
-	opt := option.WithCredentialsFile(path)
-	client, err := firestore.NewClient(c, opt)
+	
+	opt := option.WithCredentialsFile("C:\\Users\\alina\\Desktop\\Go classes\\api\\serviceAccountKey.json")
+	client, err := firestore.NewClient(c, "api-go-d910c", opt)
 	if err != nil {
 		log.Fatal("Failed to create Firestore client: %v", err)
 		return nil, err
@@ -78,16 +66,20 @@ func (*collection) GetAll() ([]views.Post, error) {
 	var posts []views.Post
 
 	i := client.Collection(collName).Documents(c)
+	defer i.Stop()
 	for {
 		doc, err := i.Next()
+		if err == i.Done {
+			break
+		}
 		if err != nil {
 			log.Fatal("Failed to return the list of posts: %v", err)
 			return nil, err
 		}
 		post := views.Post {
-			Id: doc.Data()["id"].(int64),
-			Title: doc.Data()["title"].(string),
-			Text: doc.Data()["text"].(string),
+			Id: doc.Data()["Id"].(int64),
+			Title: doc.Data()["Title"].(string),
+			Text: doc.Data()["Text"].(string),
 		}
 		posts = append(posts, post)
 	}
