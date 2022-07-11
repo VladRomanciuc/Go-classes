@@ -1,4 +1,4 @@
-package repository
+package dbapi
 
 import (
 	"github.com/aws/aws-sdk-go/aws"
@@ -6,17 +6,14 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 
-	"gitlab.com/pragmaticreviews/golang-mux-api/entity"
+	"github.com/VladRomanciuc/Go-classes/api/models"
 )
+var tableName = "posts"
 
-type dynamoDBRepo struct {
-	tableName string
-}
+type dynamoDBTable struct {}
 
-func NewDynamoDBRepository() PostRepository {
-	return &dynamoDBRepo{
-		tableName: "posts",
-	}
+func NewDynamoDB() models.DbOps {
+	return &dynamoDBTable{}
 }
 
 func createDynamoDBClient() *dynamodb.DynamoDB {
@@ -29,7 +26,7 @@ func createDynamoDBClient() *dynamodb.DynamoDB {
 	return dynamodb.New(sess)
 }
 
-func (repo *dynamoDBRepo) Save(post *entity.Post) (*entity.Post, error) {
+func (table *dynamoDBTable) AddPost(post *models.Post) (*models.Post, error) {
 	// Get a new DynamoDB client
 	dynamoDBClient := createDynamoDBClient()
 
@@ -42,7 +39,7 @@ func (repo *dynamoDBRepo) Save(post *entity.Post) (*entity.Post, error) {
 	// Create the Item Input
 	item := &dynamodb.PutItemInput{
 		Item:      attributeValue,
-		TableName: aws.String(repo.tableName),
+		TableName: aws.String(tableName),
 	}
 
 	// Save the Item into DynamoDB
@@ -54,13 +51,13 @@ func (repo *dynamoDBRepo) Save(post *entity.Post) (*entity.Post, error) {
 	return post, err
 }
 
-func (repo *dynamoDBRepo) FindAll() ([]entity.Post, error) {
+func (table *dynamoDBTable) GetAll() ([]models.Post, error) {
 	// Get a new DynamoDB client
 	dynamoDBClient := createDynamoDBClient()
 
 	// Build the query input parameters
 	params := &dynamodb.ScanInput{
-		TableName: aws.String(repo.tableName),
+		TableName: aws.String(tableName),
 	}
 
 	// Make the DynamoDB Query API call
@@ -68,9 +65,9 @@ func (repo *dynamoDBRepo) FindAll() ([]entity.Post, error) {
 	if err != nil {
 		return nil, err
 	}
-	var posts []entity.Post = []entity.Post{}
+	var posts []models.Post = []models.Post{}
 	for _, i := range result.Items {
-		post := entity.Post{}
+		post := models.Post{}
 
 		err = dynamodbattribute.UnmarshalMap(i, &post)
 
@@ -82,12 +79,12 @@ func (repo *dynamoDBRepo) FindAll() ([]entity.Post, error) {
 	return posts, nil
 }
 
-func (repo *dynamoDBRepo) FindByID(id string) (*entity.Post, error) {
+func (table *dynamoDBTable) FindByID(id string) (*models.Post, error) {
 	// Get a new DynamoDB client
 	dynamoDBClient := createDynamoDBClient()
 
 	result, err := dynamoDBClient.GetItem(&dynamodb.GetItemInput{
-		TableName: aws.String(repo.tableName),
+		TableName: aws.String(tableName),
 		Key: map[string]*dynamodb.AttributeValue{
 			"id": {
 				N: aws.String(id),
@@ -97,7 +94,7 @@ func (repo *dynamoDBRepo) FindByID(id string) (*entity.Post, error) {
 	if err != nil {
 		return nil, err
 	}
-	post := entity.Post{}
+	post := models.Post{}
 	err = dynamodbattribute.UnmarshalMap(result.Item, &post)
 	if err != nil {
 		panic(err)
@@ -106,7 +103,7 @@ func (repo *dynamoDBRepo) FindByID(id string) (*entity.Post, error) {
 }
 
 // Delete: TODO
-func (repo *dynamoDBRepo) Delete(post *entity.Post) error {
+func (table *dynamoDBTable) Delete(post *models.Post) error {
 	return nil
 }
 

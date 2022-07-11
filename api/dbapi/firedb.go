@@ -105,10 +105,14 @@ func (*collection) FindByID(id string) (*models.Post, error) {
 		return nil, err
 	}
 	post := &models.Post{
-		ID:    dsnap.Data()["Id"].(string),
+		Id:    dsnap.Data()["Id"].(int64),
 		Title: dsnap.Data()["Title"].(string),
 		Text:  dsnap.Data()["Text"].(string),
 	}
 	return post, nil
+}
+
+func(*collection) Delete(post *models.Post) error {
+	return nil
 }
 

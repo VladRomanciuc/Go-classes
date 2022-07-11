@@ -126,3 +126,8 @@ func (*sqlite) Delete(post *models.Post) error {
 	prep.Commit()
 	return nil
 }
+
+
+func (*sqlite) FindByID(id string) (*models.Post, error) {
+	return nil, nil
+}
