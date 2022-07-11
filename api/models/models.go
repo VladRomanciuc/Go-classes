@@ -7,6 +7,7 @@ import (
 type DbOps interface {
 	AddPost(post *Post) (*Post, error)
 	GetAll() ([]Post, error)
+	FindByID(id string) (*Post, error)
 }
 
 type PostService interface{

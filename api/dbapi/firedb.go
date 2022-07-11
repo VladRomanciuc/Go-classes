@@ -14,7 +14,10 @@ import (
 
 type collection struct{}
 
-const collName = "posts"
+const (
+	projectID = "pragmatic-reviews" //refactor
+	collName = "posts"
+)
 
 
 func NewFirestoreOps() models.DbOps{
@@ -82,5 +85,30 @@ func (*collection) GetAll() ([]models.Post, error) {
 		posts = append(posts, post)
 	}
 	return posts, nil
+}
+
+
+//refactor
+
+func (*collection) FindByID(id string) (*models.Post, error) {
+	c := context.Background()
+	client, err := firestore.NewClient(c, projectID)
+	if err != nil {
+		log.Fatalf("Failed to create a Firestore Client: %v", err)
+		return nil, err
+	}
+
+	defer client.Close()
+	dsnap, err := client.Collection(collName).Doc(id).Get(c)
+	if err != nil {
+		println(err.Error())
+		return nil, err
+	}
+	post := &models.Post{
+		ID:    dsnap.Data()["Id"].(string),
+		Title: dsnap.Data()["Title"].(string),
+		Text:  dsnap.Data()["Text"].(string),
+	}
+	return post, nil
 }
 
