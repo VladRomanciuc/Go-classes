@@ -16,6 +16,7 @@ type PostService interface{
 	AddPost(post *Post) (*Post, error)
 	GetAll() ([]Post, error)
 	GetById(id string) (*Post, error)
+	DeleteById(id string) (*Post, error)
 }
 
 type PostController interface{
