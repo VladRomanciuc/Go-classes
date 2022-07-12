@@ -128,6 +128,32 @@ func (*sqlite) Delete(post *models.Post) error {
 }
 
 
-func (*sqlite) FindByID(id string) (*models.Post, error) {
-	return nil, nil
+func (*sqlite) GetById(id string) (*models.Post, error) {
+	db, err := sql.Open("sqlite3", "./posts.db")
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+
+	row := db.QueryRow("select id, title, txt from posts where id = ?", id)
+
+	var post models.Post
+	if row != nil {
+		var id int64
+		var title string
+		var text string
+		err := row.Scan(&id, &title, &text)
+		if err != nil {
+			return nil, err
+		} else {
+			post = models.Post{
+				Id:    id,
+				Title: title,
+				Text:  text,
+			}
+		}
+	}
+
+	return &post, nil
+
 }

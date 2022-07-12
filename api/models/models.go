@@ -2,13 +2,12 @@ package models
 
 import (
 	"net/http"
-	"time"
 )
 
 type DbOps interface {
 	AddPost(post *Post) (*Post, error)
 	GetAll() ([]Post, error)
-	FindByID(id string) (*Post, error)
+	GetById(id string) (*Post, error)
 	Delete(post *Post) error
 }
 
@@ -16,10 +15,12 @@ type PostService interface{
 	Validate(post *Post) error
 	AddPost(post *Post) (*Post, error)
 	GetAll() ([]Post, error)
+	GetById(id string) (*Post, error)
 }
 
 type PostController interface{
 	GetAll(w http.ResponseWriter, r *http.Request)
+	GetById(w http.ResponseWriter, r *http.Request)
 	AddPost(w http.ResponseWriter, r *http.Request)
 }
 

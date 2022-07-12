@@ -10,7 +10,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/credentials v1.12.7
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.15.8
 	github.com/go-chi/chi v1.5.4
-	github.com/go-redis/redis/v9 v9.0.0-beta.1
+	github.com/go-redis/redis/v8 v8.11.5
 	github.com/gorilla/mux v1.8.0
 	github.com/mattn/go-sqlite3 v1.14.14
 	github.com/spf13/viper v1.12.0

@@ -3,29 +3,33 @@ package cache
 import (
 	"encoding/json"
 	"time"
+	"context"
 
-	"github.com/go-redis/redis/v9"
+	"github.com/go-redis/redis/v8"
 	"github.com/VladRomanciuc/Go-classes/api/models"
 )
 
 type RedisCache struct {
 	host    string
 	db      int
+	pswd    string
 	expires time.Duration
 }
 
-func NewRedisCache(host string, db int, exp time.Duration) models.PostCache {
+func NewRedisCache(host string, pswd string, db int, exp time.Duration) models.PostCache {
 	return &RedisCache{
 		host:    host,
 		db:      db,
+		pswd:	pswd,
 		expires: exp,
 	}
 }
 
 func (cache *RedisCache) getClient() *redis.Client {
+	
 	return redis.NewClient(&redis.Options{
 		Addr:     cache.host,
-		Password: "",
+		Password: cache.pswd,
 		DB:       cache.db,
 	})
 }
@@ -38,14 +42,15 @@ func (cache *RedisCache) Set(key string, post *models.Post) {
 	if err != nil {
 		panic(err)
 	}
-
-	client.Set(key, json, cache.expires*time.Second)
+	c := context.Background()
+	client.Set(c, key, json, cache.expires*time.Second)
 }
 
 func (cache *RedisCache) Get(key string) *models.Post {
 	client := cache.getClient()
-
-	val, err := client.Get(key).Result()
+	
+	c := context.Background()
+	val, err := client.Get(c, key).Result()
 	if err != nil {
 		return nil
 	}

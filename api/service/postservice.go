@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"math/rand"
+	"strconv"
 
 	"github.com/VladRomanciuc/Go-classes/api/models"
 )
@@ -38,4 +39,12 @@ func (*service) AddPost(post *models.Post) (*models.Post, error) {
 
 func (*service) GetAll() ([]models.Post, error) {
 	return db.GetAll()
+}
+
+func (*service) GetById(id string) (*models.Post, error) {
+	_, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		return nil, err
+	}
+	return db.GetById(id)
 }

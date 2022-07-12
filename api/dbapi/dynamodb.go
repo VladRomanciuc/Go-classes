@@ -79,7 +79,7 @@ func (table *dynamoDBTable) GetAll() ([]models.Post, error) {
 	return posts, nil
 }
 
-func (table *dynamoDBTable) FindByID(id string) (*models.Post, error) {
+func (table *dynamoDBTable) GetById(id string) (*models.Post, error) {
 	// Get a new DynamoDB client
 	dynamoDBClient := createDynamoDBClient()
 

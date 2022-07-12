@@ -90,7 +90,7 @@ func (*collection) GetAll() ([]models.Post, error) {
 
 //refactor
 
-func (*collection) FindByID(id string) (*models.Post, error) {
+func (*collection) GetById(id string) (*models.Post, error) {
 	c := context.Background()
 	client, err := firestore.NewClient(c, projectID)
 	if err != nil {

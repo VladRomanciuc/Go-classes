@@ -3,16 +3,22 @@ package controller
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
+	"strings"
 
 	"github.com/VladRomanciuc/Go-classes/api/models"
 )
 
-var postService models.PostService
+var (
+	postService models.PostService
+	postCache models.PostCache
+)
 
 type controller struct{}
 
-func NewPostController(service models.PostService) models.PostController {
+func NewPostController(service models.PostService, cache models.PostCache) models.PostController {
 	postService = service
+	postCache = cache
 	return &controller{}
 }
 
@@ -59,8 +65,34 @@ func (*controller) AddPost(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(models.ServiceError{Message: "Error adding the post"})
 		return
 	}
+	//add new post to cache
+	postCache.Set(strconv.FormatInt(post.Id, 10), &post)
+
 	//the header will have status 200 and body the encoded json
 	w.WriteHeader(http.StatusOK)
 	//variable result encode post to json
 	json.NewEncoder(w).Encode(response)
+}
+
+func (*controller) GetById(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	
+	postId := strings.Split(r.URL.Path, "/")[2]
+	
+	var post *models.Post = postCache.Get(postId)
+	if post == nil {
+		post, err := postService.GetById(postId)
+		if err != nil {
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(models.ServiceError{Message: "No posts found!"})
+			return
+		}
+		postCache.Set(postId, post)
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(post)
+	} else {
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(post)
+	}
+
 }
