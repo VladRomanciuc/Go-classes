@@ -2,6 +2,7 @@ package models
 
 import (
 	"net/http"
+	"time"
 )
 
 type DbOps interface {
@@ -28,7 +29,12 @@ type Router interface {
 	SERVE(port string)
 }
 
+type PostCache interface {
+	Set(key string, value *Post)
+	Get(key string) *Post
+}
 
+//
 type DynamoConfig struct {
 	Endpoint string
 	Region  string
@@ -40,7 +46,7 @@ type DynamoConfig struct {
 
 //The structure of data to be handled + a json mapper for encoding/decoding
 type Post struct{
-	Id 		int64		`json:"Id"`
+	Id 		int64	`json:"Id"`
 	Title	string	`json:"Title"`
 	Text 	string	`json:"Text"`
 }
@@ -48,3 +54,4 @@ type Post struct{
 type ServiceError struct{
 	Message string `json:"message"`
 }
+
