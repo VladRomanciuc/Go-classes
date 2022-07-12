@@ -100,31 +100,33 @@ func (*sqlite) GetAll() ([]models.Post, error) {
 	return posts, nil
 }
 
-func (*sqlite) Delete(post *models.Post) error {
+func (*sqlite) DeleteById(id string) (*models.Post, error) {
 	db, err := sql.Open("sqlite3", "./posts.db")
 	if err != nil {
 		log.Fatal(err)
-		return err
+		return nil, err
 	}
 
 	prep, err := db.Begin()
 	if err != nil {
 		log.Fatal(err)
-		return err
+		return nil, err
 	}
 	delete, err := prep.Prepare("delete from posts where id = ?")
 	if err != nil {
 		log.Fatal(err)
-		return err
+		return nil, err
 	}
 	defer delete.Close()
-	_, err = delete.Exec(post.Id)
+
+	_, err = delete.Exec(id)
 	if err != nil {
 		log.Fatal(err)
-		return err
+		return nil, err
 	}
 	prep.Commit()
-	return nil
+
+	return nil, nil
 }
 
 

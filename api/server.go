@@ -28,8 +28,9 @@ var (
 func main() {
     port := ":8080"
 	api.GET("/posts", postController.GetAll)
-	api.GET("/posts/{id}", postController.GetById)
 	api.POST("/posts", postController.AddPost)
+	api.GET("/posts/{id}", postController.GetById)
+	api.DELETE("/posts/{id}", postController.DeleteById)
     api.GET("/cardetails", carDetailsController.GetCarDetails)
 	api.SERVE(port)
 }

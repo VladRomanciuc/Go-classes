@@ -19,7 +19,10 @@ func NewRouterMux() models.Router{
 func (*routerMux) GET(url string, f func(w http.ResponseWriter, r *http.Request)){
 	muxRouter.HandleFunc(url, f).Methods("GET")
 }
-func (*routerMux)	POST(url string, f func(w http.ResponseWriter, r *http.Request)){
+func (*routerMux) POST(url string, f func(w http.ResponseWriter, r *http.Request)){
+	muxRouter.HandleFunc(url, f).Methods("POST")
+}
+func (*routerMux) DELETE(url string, f func(w http.ResponseWriter, r *http.Request)){
 	muxRouter.HandleFunc(url, f).Methods("POST")
 }
 func (*routerMux)	SERVE(port string){

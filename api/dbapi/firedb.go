@@ -112,7 +112,7 @@ func (*collection) GetById(id string) (*models.Post, error) {
 	return post, nil
 }
 
-func(*collection) Delete(post *models.Post) error {
-	return nil
+func(*collection) DeleteById(id string) (*models.Post, error) {
+	return nil, nil
 }
 

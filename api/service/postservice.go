@@ -48,3 +48,11 @@ func (*service) GetById(id string) (*models.Post, error) {
 	}
 	return db.GetById(id)
 }
+
+func (*service) DeleteById(id string) (*models.Post, error) {
+	_, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		return nil, err
+	}
+	return db.GetById(id)
+}

@@ -63,3 +63,21 @@ func (cache *RedisCache) Get(key string) *models.Post {
 
 	return &post
 }
+
+func (cache *RedisCache) Del(key string) *models.Post {
+	client := cache.getClient()
+	
+	c := context.Background()
+	del, err := client.Del(c, key).Result()
+	if err != nil {
+		return nil
+	}
+
+	post := models.Post{}
+	err = json.Unmarshal([]byte(string(del)), &post)
+	if err != nil {
+		panic(err)
+	}
+
+	return &post
+}

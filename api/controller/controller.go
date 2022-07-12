@@ -77,22 +77,41 @@ func (*controller) AddPost(w http.ResponseWriter, r *http.Request) {
 func (*controller) GetById(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	
-	postId := strings.Split(r.URL.Path, "/")[2]
+	Id := strings.Split(r.URL.Path, "/")[2]
 	
-	var post *models.Post = postCache.Get(postId)
+	var post *models.Post = postCache.Get(Id)
 	if post == nil {
-		post, err := postService.GetById(postId)
+		post, err := postService.GetById(Id)
 		if err != nil {
 			w.WriteHeader(http.StatusNotFound)
 			json.NewEncoder(w).Encode(models.ServiceError{Message: "No posts found!"})
 			return
 		}
-		postCache.Set(postId, post)
+		postCache.Set(Id, post)
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(post)
 	} else {
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(post)
 	}
-
+}
+func (*controller) DeleteById(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	
+	Id := strings.Split(r.URL.Path, "/")[2]
+	
+	var post *models.Post = postCache.Del(Id)
+	if post == nil {
+		post, err := postService.DeleteById(Id)
+		if err != nil {
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(models.ServiceError{Message: "No posts found!"})
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(post)
+	} else {
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(post)
+	}
 }
