@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"math/rand"
 	"net/http"
+	"strconv"
 
 	"github.com/VladRomanciuc/Go-classes/api/models"
 )
@@ -42,7 +43,8 @@ func AddPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//if no errors assign the next postID to the json posted of type post
-	post.Id = rand.Int63()
+	i := rand.Int63()
+	post.Id = strconv.FormatInt(i, 10)
 	//add the new post to posts slice
 	posts = append(posts, post)
 	//the header will have status 200 and body the encoded json

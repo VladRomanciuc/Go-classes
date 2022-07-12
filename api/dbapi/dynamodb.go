@@ -1,6 +1,7 @@
 package dbapi
 
 import (
+
 	"log"
 	"context"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
@@ -14,6 +15,12 @@ import (
 	"github.com/spf13/viper"
 )
 
+var tableName = "posts"
+
+type dynamoDBTable struct {
+	tableName string
+}
+
 func getEnv(key string) string {
 	viper.SetConfigFile(".env")
 	err := viper.ReadInConfig()
@@ -26,13 +33,6 @@ func getEnv(key string) string {
 	  log.Fatalf("Invalid type assertion")
 	}
 	return value
-  }
-
-
-var tableName = "posts"
-
-type dynamoDBTable struct {
-	tableName string
 }
 
 func NewDynamoDB() models.DbOps {
@@ -45,10 +45,6 @@ func createDynamoDBClient() *dynamodb.Client {
 	c := context.Background()
 	cfg, err := config.LoadDefaultConfig(c,
 		config.WithRegion(getEnv("Region")),
-		config.WithEndpointResolverWithOptions(aws.EndpointResolverWithOptionsFunc(
-			func(service, region string, options ...interface{}) (aws.Endpoint, error) {
-				return aws.Endpoint{URL: getEnv("Endpoint"), SigningRegion: getEnv("Region")}, nil
-			})),
 	)
 	if err != nil {
 		log.Fatalf("unable to load SDK config, %v", err)
@@ -67,23 +63,17 @@ func (table *dynamoDBTable) AddPost(post *models.Post) (*models.Post, error) {
 	dynamoDBClient := createDynamoDBClient()
 
 	// Transforms the post to map[string]*dynamodb.AttributeValue
-	attributeValue, err := attributevalue.MarshalMap(post)
-	if err != nil {
-		return nil, err
-	}
-
-	// Create the Item Input
-	item := &dynamodb.PutItemInput{
-		Item:      attributeValue,
+	_, err := dynamoDBClient.PutItem(c, &dynamodb.PutItemInput{
 		TableName: aws.String(tableName),
-	}
-
-	// Save the Item into DynamoDB
-	_, err = dynamoDBClient.PutItem(c, item)
+		Item: map[string]types.AttributeValue{
+			"id": &types.AttributeValueMemberS{Value: post.Id},
+			"title": &types.AttributeValueMemberS{Value: post.Title},
+			"text": &types.AttributeValueMemberS{Value: post.Text},
+			},	
+	})
 	if err != nil {
 		return nil, err
 	}
-
 	return post, err
 }
 
@@ -102,6 +92,7 @@ func (table *dynamoDBTable) GetAll() ([]models.Post, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	var posts []models.Post = []models.Post{}
 	for _, i := range result.Items {
 		post := models.Post{}
@@ -138,13 +129,13 @@ func (table *dynamoDBTable) GetById(id string) (*models.Post, error) {
 	return &post, nil
 }
 
-// Delete: TODO
+
 func (table *dynamoDBTable) DeleteById(id string) (*models.Post, error) {
 	c := context.Background()
 	// Get a new DynamoDB client
 	dynamoDBClient := createDynamoDBClient()
 
-	result, err := dynamoDBClient.DeleteItem(c, &dynamodb.DeleteItemInput{
+	_, err := dynamoDBClient.DeleteItem(c, &dynamodb.DeleteItemInput{
 		TableName: aws.String(tableName),
 		Key: map[string]types.AttributeValue{
 			"id": &types.AttributeValueMemberS{Value: *aws.String(id)},
@@ -153,11 +144,7 @@ func (table *dynamoDBTable) DeleteById(id string) (*models.Post, error) {
 	if err != nil {
 		return nil, err
 	}
-	post := models.Post{}
-	err = attributevalue.UnmarshalMap(result.Attributes, &post)
-	if err != nil {
-		panic(err)
-	}
-	return &post, nil
+	
+	return nil, nil
 }
 

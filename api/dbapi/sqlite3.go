@@ -77,7 +77,7 @@ func (*sqlite) GetAll() ([]models.Post, error) {
 
 	var posts []models.Post
 	for entry.Next() {
-		var id int64
+		var id string
 		var title string
 		var text string
 		err = entry.Scan(&id, &title, &text)
@@ -141,7 +141,7 @@ func (*sqlite) GetById(id string) (*models.Post, error) {
 
 	var post models.Post
 	if row != nil {
-		var id int64
+		var id string
 		var title string
 		var text string
 		err := row.Scan(&id, &title, &text)

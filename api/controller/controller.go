@@ -3,7 +3,6 @@ package controller
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/VladRomanciuc/Go-classes/api/models"
@@ -66,7 +65,7 @@ func (*controller) AddPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//add new post to cache
-	postCache.Set(strconv.FormatInt(post.Id, 10), &post)
+	postCache.Set(post.Id, &post)
 
 	//the header will have status 200 and body the encoded json
 	w.WriteHeader(http.StatusOK)

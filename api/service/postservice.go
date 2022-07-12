@@ -33,7 +33,8 @@ func (*service) Validate(post *models.Post) error {
 }
 
 func (*service) AddPost(post *models.Post) (*models.Post, error) {
-	post.Id = rand.Int63()
+	i := rand.Int63()
+	post.Id = strconv.FormatInt(i, 10)
 	return db.AddPost(post)
 }
 
@@ -42,17 +43,22 @@ func (*service) GetAll() ([]models.Post, error) {
 }
 
 func (*service) GetById(id string) (*models.Post, error) {
+	/*
 	_, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
 		return nil, err
 	}
+	*/
 	return db.GetById(id)
 }
 
 func (*service) DeleteById(id string) (*models.Post, error) {
-	_, err := strconv.ParseInt(id, 10, 64)
+	/*
+	_, err := strconv.ParseUint(id, 10, 64)
 	if err != nil {
 		return nil, err
 	}
-	return db.GetById(id)
+	#*/
+
+	return db.DeleteById(id)
 }

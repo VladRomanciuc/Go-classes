@@ -78,7 +78,7 @@ func (*collection) GetAll() ([]models.Post, error) {
 			return nil, err
 		}
 		post := models.Post {
-			Id: doc.Data()["Id"].(int64),
+			Id: doc.Data()["Id"].(string),
 			Title: doc.Data()["Title"].(string),
 			Text: doc.Data()["Text"].(string),
 		}
@@ -105,7 +105,7 @@ func (*collection) GetById(id string) (*models.Post, error) {
 		return nil, err
 	}
 	post := &models.Post{
-		Id:    dsnap.Data()["Id"].(int64),
+		Id:    dsnap.Data()["Id"].(string),
 		Title: dsnap.Data()["Title"].(string),
 		Text:  dsnap.Data()["Text"].(string),
 	}

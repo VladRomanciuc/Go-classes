@@ -23,7 +23,7 @@ func (*routerMux) POST(url string, f func(w http.ResponseWriter, r *http.Request
 	muxRouter.HandleFunc(url, f).Methods("POST")
 }
 func (*routerMux) DELETE(url string, f func(w http.ResponseWriter, r *http.Request)){
-	muxRouter.HandleFunc(url, f).Methods("POST")
+	muxRouter.HandleFunc(url, f).Methods("DELETE")
 }
 func (*routerMux)	SERVE(port string){
 	http.ListenAndServe(port, muxRouter)

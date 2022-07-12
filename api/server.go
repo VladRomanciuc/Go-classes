@@ -11,7 +11,8 @@ import (
 
 var (
 	//dbops models.DbOps = dbapi.NewFirestoreOps()
-	dbops models.DbOps = dbapi.NewSQLiteDb()
+	//dbops models.DbOps = dbapi.NewSQLiteDb()
+	dbops models.DbOps = dbapi.NewDynamoDB()
 
 	postService models.PostService = service.NewPostService(dbops)
 	carDetailsService models.CarDetailsService = service.NewCarDetailsService()

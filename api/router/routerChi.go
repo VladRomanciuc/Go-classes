@@ -23,7 +23,7 @@ func (*routerChi)	POST(url string, f func(w http.ResponseWriter, r *http.Request
 	chiRouter.Post(url, f)
 }
 func (*routerChi)	DELETE(url string, f func(w http.ResponseWriter, r *http.Request)){
-	chiRouter.Post(url, f)
+	chiRouter.Delete(url, f)
 }
 func (*routerChi)	SERVE(port string){
 	http.ListenAndServe(port, chiRouter)

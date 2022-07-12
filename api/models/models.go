@@ -42,7 +42,7 @@ type PostCache interface {
 
 //The structure of data to be handled + a json mapper for encoding/decoding
 type Post struct{
-	Id 		int64	`json:"Id"`
+	Id 		string	`json:"Id"`
 	Title	string	`json:"Title"`
 	Text 	string	`json:"Text"`
 }
