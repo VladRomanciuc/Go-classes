@@ -10,28 +10,36 @@ import (
 )
 
 var (
-	//dbops models.DbOps = dbapi.NewFirestoreOps()
-	//dbops models.DbOps = dbapi.NewSQLiteDb()
-	dbops models.DbOps = dbapi.NewDynamoDB()
+	//DB switch
+	dbops models.DbOps = dbapi.NewFirestoreOps()
+	//dbops models.DbOps = dbapi.NewSQLiteDb() //NO ERRORS
+	//dbops models.DbOps = dbapi.NewDynamoDB() //NO ERRORS
 
-	postService models.PostService = service.NewPostService(dbops)
-	carDetailsService models.CarDetailsService = service.NewCarDetailsService()
+	//Post service require the db
+	postService models.PostService = service.NewPostService(dbops) //NO ERRORS
+	//Cache layer needs credentials
+	postCache models.PostCache = cache.NewRedisCache("localhost:49154", "redispw", 0, 360) //NO ERRORS
 
-	postCache models.PostCache = cache.NewRedisCache("localhost:49154", "redispw", 0, 60)
-
-	postController models.PostController = controller.NewPostController(postService, postCache)
-	carDetailsController models.CarDetailsController = controller.NewCarDetailsController(carDetailsService)
+	//The controller requieres both post and cache services
+	postController models.PostController = controller.NewPostController(postService, postCache) //NO ERRORS
 	
-	//api models.Router = router.NewRouterMux()
-	api models.Router = router.NewRouterChi()
+	//Router switch
+	//api models.Router = router.NewRouterMux() //NO ERRORS
+	api models.Router = router.NewRouterChi() //NO ERRORS
+
+	//Example of gathering info from differnt API
+	carDetailsService models.CarDetailsService = service.NewCarDetailsService()
+	carDetailsController models.CarDetailsController = controller.NewCarDetailsController(carDetailsService)
 )
 
 func main() {
     port := ":8080"
+	//Basic ops with a post
 	api.GET("/posts", postController.GetAll)
 	api.POST("/posts", postController.AddPost)
 	api.GET("/posts/{id}", postController.GetById)
 	api.DELETE("/posts/{id}", postController.DeleteById)
+	//Gather info from 2 differnt json
     api.GET("/cardetails", carDetailsController.GetCarDetails)
 	api.SERVE(port)
 }

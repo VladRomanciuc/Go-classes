@@ -8,6 +8,8 @@ import (
 
 )
 
+//Mux router methods
+
 var muxRouter = mux.NewRouter()
 
 type routerMux struct{}

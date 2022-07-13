@@ -8,6 +8,8 @@ import (
 
 )
 
+//Chi router methods
+
 var chiRouter = chi.NewRouter()
 
 type routerChi struct{}
