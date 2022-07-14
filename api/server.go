@@ -11,7 +11,7 @@ import (
 
 var (
 	//DB switch
-	dbops models.DbOps = dbapi.NewFirestoreOps()
+	dbops models.DbOps = dbapi.NewFirestoreOps() //NO ERRORS
 	//dbops models.DbOps = dbapi.NewSQLiteDb() //NO ERRORS
 	//dbops models.DbOps = dbapi.NewDynamoDB() //NO ERRORS
 
